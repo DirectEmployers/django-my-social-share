@@ -28,12 +28,19 @@ class Network(models.Model):
     share_url = models.CharField(_('Share URL'), max_length=400, blank=True, 
         null=True, 
         help_text=_('URL with %url, %title, %excerpt, % img %source codes'))
+    messaging_url = models.CharField(_('Messaging URL'), max_length=400, blank=True, 
+        null=True, 
+        help_text=_('URL with %url, %title, and %message source codes'))
     image_url = models.URLField(_('URL of image'), null=True, blank=True,
         help_text=_('Default picture for shares to this network'))
     active = models.BooleanField(_('Active'))
     auth_required = models.BooleanField(_('Authentication Required'),
         help_text=_('Users must be logged in to the network to see'))
     
+    def __unicode__(self):
+        return u'%s (%s)' % self.name, self.short_name
+    
+        
 class Share(models.Model):
     """Keeps sharing history
     
@@ -62,3 +69,6 @@ class Share(models.Model):
         help_text=_('Message text shared.'))
     image = models.URLField(_('Image Shared'), max_length=400, null=True,
         blank=True, help_text=_('URL of image shared'))
+    
+    def __unicode__(self):
+        return u'%s (%s)' % self.network.name, self.excerpt 
