@@ -1,0 +1,38 @@
+* CONFIG
+#+STARTUP: overview
+#+STARTUP: hidestars
+#+STARTUP: logdone
+#+STARTUP: indent
+#+PROPERTY: Effort_ALL  0:10 0:20 0:30 1:00 2:00 4:00 6:00 8:00
+#+COLUMNS: %38ITEM(Details) %TAGS(Context) %7TODO(To Do) %5Effort(Time){:} %6CLOCKSUM{Total}
+#+PROPERTY: Effort_ALL 0 0:10 0:20 0:30 1:00 2:00 3:00 4:00 8:00
+#+TAGS: { OFFICE(o) DEVELOPMENT (v) TESTING (e) SYSADMIN (s) HOME(h) OTHER (t)} COMPUTER(c) PROJECT(j) READING(r) MEETING(m)
+#+SEQ_TODO: TODO(t) PROPOSED (p) STARTED(s) WAITING(w) APPT(a) DELEGATED(l)| DONE(d) CANCELLED(c) DEFERRED(f)
+  
+* Django My Social Share   :SEO-SOCIAL:
+** Project Overview 
+*tl;dr: Social bookmark tool for Django that provides template tags for Django Apps and can be client-side included by other web sites.*
+
+** Project Objectives
+1. Make it easy to add social sharing features to Django apps and external websites.
+2. Integrate with Django My URLS to allow for external link tracking.
+3. Provide a backedn that allows for different actions based on being authenticated or not.
+   Most often, this will be to automate sharing in conjunction with django-social-auth.
+** Definitions
+*** Follow
+Use the word 'follow' instead of subscribe. It's more friendly,
+and personal.
+*** Sharing
+Posting a link or content on a social website
+*** Messaging
+Sending a message to a person you are connected to on a social network.
+* Activities
+** TODO Set Up Project Skeleton
+** TODO Import existing social share code.
+** TODO Write authenticated backend for LinkedIn
+** TODO Write authenticated backend for Twitter
+** TODO Write authenticated backend for LinkedIn
+** TODO Integrate with MyURLS
+** TODO Publish Project
+
+* Archive
