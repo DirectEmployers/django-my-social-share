@@ -32,6 +32,7 @@ Sending a message to a person you are connected to on a social network.
 ** DONE Update Requirements.txt					:DEVELOPMENT:
 PyPi is flakey right now so need to do this later.
 ** STARTED Import existing social share code.			:DEVELOPMENT:
+** TODO Add DE UI Framework Support
 ** TODO Write authenticated backend for LinkedIn		:DEVELOPMENT:
 ** TODO Write authenticated backend for Twitter			:DEVELOPMENT:
 ** TODO Write authenticated backend for LinkedIn		:DEVELOPMENT:

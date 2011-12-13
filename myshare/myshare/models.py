@@ -28,8 +28,8 @@ class Network(models.Model):
     share_url = models.CharField(_('Share URL'), max_length=400, blank=True, 
         null=True, 
         help_text=_('URL with %url, %title, %excerpt, % img %source codes'))
-    messaging_url = models.CharField(_('Messaging URL'), max_length=400, blank=True, 
-        null=True, 
+    messaging_url = models.CharField(_('Messaging URL'), max_length=400, 
+        blank=True, null=True, 
         help_text=_('URL with %url, %title, and %message source codes'))
     image_url = models.URLField(_('URL of image'), null=True, blank=True,
         help_text=_('Default picture for shares to this network'))
