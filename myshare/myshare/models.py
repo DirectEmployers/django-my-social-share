@@ -4,12 +4,14 @@ models.py -- implements models for My Social Share App
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 
-
-network_share_url_help = _("""The URL of the network URL with codes %(url)s, 
+NETWORK_SHARE_URL_HELP = _("""The URL of the network URL with codes %(url)s, 
     %(title)s, %(description)s,%(image)s and %(message)s source codes
     
-    """
+    """)
+                           
 class Network(models.Model):
     """ Stores network definitions for social networks.
     
@@ -31,7 +33,7 @@ class Network(models.Model):
     short_name = models.CharField(_('Short Name for Network'), max_length=12,
         help_text=_('Short identifier for network with no space.'))
     share_url = models.CharField(_('Share URL'), max_length=400, blank=True, 
-        null=True, help_text=network_share_url_help)
+        null=True, help_text=NETWORK_SHARE_URL_HELP)
     messaging_url = models.CharField(_('Messaging URL'), max_length=400, 
         blank=True, null=True,
         help_text=_('URL with %url, %title, and %message source codes'))
@@ -75,7 +77,7 @@ class Share(models.Model):
         help_text=_('Link that was shared.'))
     title = models.CharField(_('Title Text'), max_length=128, null=True,
                              blank=True)
-    excerpt = models.CharFied(_('Excerpt Text'), max_length=400, null=True,
+    excerpt = models.CharField(_('Excerpt Text'), max_length=400, null=True,
         blank=True, help_text=_('Text supplied to network with share'))
     message = models.TextField(_('Message Text'), null=True, blank=True,
         help_text=_('Message text shared.'))
