@@ -12,6 +12,11 @@ NETWORK_SHARE_URL_HELP = _("""The URL of the network URL with codes %(url)s,
     
     """)
                            
+STATUS_CHOICES = (
+    (1, 'Inactive'),
+    (2, 'Active'),
+)
+
 class Network(models.Model):
     """ Stores network definitions for social networks.
     
@@ -39,7 +44,8 @@ class Network(models.Model):
         help_text=_('URL with %url, %title, and %message source codes'))
     image_url = models.URLField(_('URL of image'), null=True, blank=True,
         help_text=_('Default picture for shares to this network'))
-    active = models.BooleanField(_('Active'))
+    status = models.IntegerField(_('Active'), choices=STATUS_CHOICES,
+                                 default=2)
     auth_required = models.BooleanField(_('Authentication Required'),
         help_text=_('Users must be logged in to the network to see'))
     
