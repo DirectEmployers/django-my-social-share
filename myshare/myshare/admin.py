@@ -1,3 +1,6 @@
+"""
+admin.py -- Django admin classes for myshare
+"""
 from django.contrib import admin
 from models import Network, Share
 

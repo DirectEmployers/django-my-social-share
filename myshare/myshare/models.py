@@ -5,6 +5,11 @@ models.py -- implements models for My Social Share App
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+
+network_share_url_help = _("""The URL of the network URL with codes %(url)s, 
+    %(title)s, %(description)s,%(image)s and %(message)s source codes
+    
+    """
 class Network(models.Model):
     """ Stores network definitions for social networks.
     
@@ -26,10 +31,9 @@ class Network(models.Model):
     short_name = models.CharField(_('Short Name for Network'), max_length=12,
         help_text=_('Short identifier for network with no space.'))
     share_url = models.CharField(_('Share URL'), max_length=400, blank=True, 
-        null=True, 
-        help_text=_('URL with %url, %title, %excerpt, % img %source codes'))
+        null=True, help_text=network_share_url_help)
     messaging_url = models.CharField(_('Messaging URL'), max_length=400, 
-        blank=True, null=True, 
+        blank=True, null=True,
         help_text=_('URL with %url, %title, and %message source codes'))
     image_url = models.URLField(_('URL of image'), null=True, blank=True,
         help_text=_('Default picture for shares to this network'))
@@ -47,22 +51,30 @@ class Share(models.Model):
     Attributes:
     
     - user -- user who created the link
+    - site -- django sites framework object
+    - external_site -- URL for external website
     - created -- datestamp for share
     - network -- network shared on.
     - url -- Link shared
-    - myurl -- MyUrl shared
-    - excerpt -- Excerpt text shared
+    - myurl -- MyUrl- use to track link click metrics
+    - title -- Title of share (where appropriate)
+    - excerpt -- Excerpt or description text shared
     - message -- Message text
     - image -- URL of image shared
     """
     
-    user = models.ForeignKey(_('User'), null=True, blank=True, 
+    user = models.ForeignKey(User, null=True, blank=True, 
         help_text=_('User who created share'))
+    site = models.ForeignKey(Site, null=True, blank=True)
+    external_site = models.URLField(_('External Site'), max_length=100, 
+                                      null=True, blank=True)
     created = models.DateTimeField(_('Created'), auto_now_add=True)
     network = models.ForeignKey(_('Network'), related_name="Social Shares", 
         help_text=_('Network share was made on.'))
     url = models.URLField(_('Shared URL'), max_length=400, 
         help_text=_('Link that was shared.'))
+    title = models.CharField(_('Title Text'), max_length=128, null=True,
+                             blank=True)
     excerpt = models.CharFied(_('Excerpt Text'), max_length=400, null=True,
         blank=True, help_text=_('Text supplied to network with share'))
     message = models.TextField(_('Message Text'), null=True, blank=True,
