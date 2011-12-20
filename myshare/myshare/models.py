@@ -77,7 +77,7 @@ class Share(models.Model):
     external_site = models.URLField(_('External Site'), max_length=100, 
                                       null=True, blank=True)
     created = models.DateTimeField(_('Created'), auto_now_add=True)
-    network = models.ForeignKey(_('Network'), related_name="Social Shares", 
+    network = models.ForeignKey(Network, related_name="Social Shares", 
         help_text=_('Network share was made on.'))
     url = models.URLField(_('Shared URL'), max_length=400, 
         help_text=_('Link that was shared.'))
