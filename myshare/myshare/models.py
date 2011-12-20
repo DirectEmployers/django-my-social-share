@@ -8,9 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 
 NETWORK_SHARE_URL_HELP = _("""The URL of the network URL with codes %(url)s, 
-    %(title)s, %(description)s,%(image)s and %(message)s source codes
-    
-    """)
+    %(title)s, %(description)s,%(image)s and %(message)s source codes""")
                            
 STATUS_CHOICES = (
     (1, 'Inactive'),
@@ -68,7 +66,7 @@ class Share(models.Model):
     - title -- Title of share (where appropriate)
     - excerpt -- Excerpt or description text shared
     - message -- Message text
-    - image -- URL of image shared
+    - image -- URL pointing to shared image
     """
     
     user = models.ForeignKey(User, null=True, blank=True, 
