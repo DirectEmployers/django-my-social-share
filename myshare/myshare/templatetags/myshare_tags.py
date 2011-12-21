@@ -53,7 +53,11 @@ def show_bookmarks(context, title, object_or_url, description=""):
         from myurls.models import MyUrl
         # get a myurl for the destination URL
         myurl = MyUrl(to_url=url,
-                      notes=settings.SHARE_NOTE or _('Created by Django Social share')
+            notes=settings.DEFAULT_SHARE_NOTE or \
+            _('Created by Django Social share'),
+            utm_source=settings.DEFAULT_SHARE_UTM_SOURCE or 'socialshare',
+            utm_medium=settings.DEFAULT_SHARE_UTM_MEDIA or 'socialmedia',
+            
             )
     
 
