@@ -1,7 +1,8 @@
 # Django settings for example project.
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+#TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = True
 import os, sys
 APP = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 PROJ_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -116,3 +117,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'myshare',
 )
+
+# Django Social Share Settings
+# SHARE_DEFAULT_IMG_URL = 'http://path.to/image.png'
+# SHARE_DEFAULT_TITLE = 'The title you want automatically inserted in shares'
+# SHARE_DEFAULT_DESCRIPTION = 'Text you want automatically in description'
+# SHARE_DEFAULT_MESSAGE = 'Default message text'
+# SHARE_NOTE='Default note to be saved with link (not shared)'
