@@ -15,6 +15,11 @@ STATUS_CHOICES = (
     (2, 'Active'),
 )
 
+PRIVACY_CHOICES = (
+    (1, 'Public'),
+    (2, 'Private'),
+)
+
 class Network(models.Model):
     """ Stores network definitions for social networks.
     
@@ -67,6 +72,7 @@ class Share(models.Model):
     - excerpt -- Excerpt or description text shared
     - message -- Message text
     - image -- URL pointing to shared image
+    - private -- indicates if share history should be public (future)
     """
     
     user = models.ForeignKey(User, null=True, blank=True, 
@@ -87,6 +93,8 @@ class Share(models.Model):
         help_text=_('Message text shared.'))
     image = models.URLField(_('Image Shared'), max_length=400, null=True,
         blank=True, help_text=_('URL of image shared'))
+    privacy = models.IntegerField(_('Privacy'), choices=PRIVACY_CHOICES, 
+        default=1, help_text=_('Private shares are only visible to you.'))
     
     def __unicode__(self):
         return u'%s (%s)' % self.network.name, self.excerpt 
