@@ -20,14 +20,18 @@ def share_button_clicked(request):
     Authenticated -- shows API share options.
     """
     if request.user.is_authenticated():
-        render_to_response('share_not_authenticated.html')
+        render_to_response('share_not_authenticated.html', RequestContext(request))
     else:
         render_to_response('share_authenticated.html', RequestContext(request))
 
 def email_button_clicked(request):
     """Implements view when email/save is clicked"""
     if request.user.is_authenticated():
-        # add emails
+        # Logged in users get a much more simple sharing form
+    else:
+        # Not logged in, you get invited to join and can only send to one email.
+        
+       
 
 def share_not_authenticated(request):
     """Implements instant share box for anonymous users
@@ -47,6 +51,8 @@ def share_authenticated(request):
     """
 
     if 'django_social_auth' in settings.INSTALLED_APPS:
+        # import the stuff we need
+        from 
         # puth the awesome in here 
         pass
     else:
