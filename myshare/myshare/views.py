@@ -32,7 +32,6 @@ def email_button_clicked(request):
     else:
         # Not logged in, you get invited to join and can only send to one email.
         render_to_response('email_anonymous.html', RequestContext(request))        
-       
 
 def share_not_authenticated(request):
     """Implements instant share box for anonymous users
@@ -47,17 +46,17 @@ def share_not_authenticated(request):
 def share_authenticated(request):
     """Implements instant share box for authenticated users
     
-    Requires django social auth be installed to work. If social auth is not 
-    installed shows the anonymous sharing box
+    If django-social-auth is not installed shows the anonymous sharing box.
     """
-
+    
     if 'django_social_auth' in settings.INSTALLED_APPS:
         # import the stuff we need
         from 
         # puth the awesome in here 
         pass
     else:
-        render_to_response('share_anonymous.html')
+        # just show the anonymous share dialog.
+        render_to_response('share_anonymous.html', RequestContext(request))
 
 
 def direct_message(request):

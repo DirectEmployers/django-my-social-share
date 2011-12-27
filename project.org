@@ -36,6 +36,7 @@ PyPi is flakey right now so need to do this later.
 ** TODO Write authenticated backend for LinkedIn		:DEVELOPMENT:
 ** TODO Write authenticated backend for Twitter                :DEVELOPMENT:
 ** TODO Write authenticated backend for LinkedIn		:DEVELOPMENT:
+** TODO Write email share backend
 ** TODO Integrate with MyURLS					:DEVELOPMENT:
 ** TODO Publish Project
 
