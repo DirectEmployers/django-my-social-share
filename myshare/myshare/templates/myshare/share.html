@@ -1,0 +1,23 @@
+{% load i18n %}
+{% comment %}
+share.html -- Implements sharing for logged in users.
+
+Designed for using ModelForm instead of just droppning a bunch of social
+share links. Allows user to share with multiple networks with a single share.
+{% endcomment %}
+
+{% extends "dialog.html" %}
+{% block title %}{% trans "Social Share" %}{% endblock title %}
+{% block content %}
+   <h1>{% trans "Social Share Link" %}</h1>
+    <p>
+    {% trans "Share" %}{{ share.url }}{% trans "on:" %}
+    </p>
+    SHARING FORM GOES HERE
+    <form action="" method="post">
+    {% csrf_token %}
+    {% include 'includes/form-error-highlight.html' %}
+    <button type="submit" class="btn primary" value="submit">{% trans "submit" %}</button>
+	  &nbsp;<button type="reset"class="btn">{% trans "reset" %}</button>
+    </form>
+{% endblock content %}
