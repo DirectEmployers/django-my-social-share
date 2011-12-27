@@ -1,0 +1,19 @@
+{% load i18n %}
+{% comment %}
+email_authenticated.html -- Implements send to friend for logged in users.
+{% endcomment %}
+
+{% extends "dialog.html" %}
+{% block title %}{% trans "Email Link" %}{% endblock title %}
+{% block content %}
+   <h1>{% trans "Email Link" %}</h1>
+    <p>
+    {% trans "Send link to a friend:" %}
+    </p>
+    <form action="" method="post">
+    {% csrf_token %}
+    {% include 'includes/form-error-highlight.html' %}
+    <button type="submit" class="btn primary" value="submit">{% trans "submit" %}</button>
+	  &nbsp;<button type="reset"class="btn">{% trans "reset" %}</button>
+    </form>
+{% endblock content %}

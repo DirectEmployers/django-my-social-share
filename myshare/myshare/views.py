@@ -20,7 +20,7 @@ def share_button_clicked(request):
     Authenticated -- shows API share options.
     """
     if request.user.is_authenticated():
-        render_to_response('share_not_authenticated.html', RequestContext(request))
+        render_to_response('share_anonymous.html', RequestContext(request))
     else:
         render_to_response('share_authenticated.html', RequestContext(request))
 
@@ -28,9 +28,10 @@ def email_button_clicked(request):
     """Implements view when email/save is clicked"""
     if request.user.is_authenticated():
         # Logged in users get a much more simple sharing form
+        render_to_response('email_authenticated.html', RequestContext(request))
     else:
         # Not logged in, you get invited to join and can only send to one email.
-        
+        render_to_response('email_anonymous.html', RequestContext(request))        
        
 
 def share_not_authenticated(request):
@@ -56,7 +57,7 @@ def share_authenticated(request):
         # puth the awesome in here 
         pass
     else:
-        render_to_response('anonymous_share.html')
+        render_to_response('share_anonymous.html')
 
 
 def direct_message(request):
@@ -65,7 +66,13 @@ def direct_message(request):
 
 def email_share(request):
     """Implements send to a friend/self functionality"""
-    pass
+    if request.user.is_authenticated():
+            # render the authenticated version that lets you edit the message
+            render_to_response('email_authenticated.html', RequestContext(request))
+        else:
+            # not logged in, then everything is fixed (antispam precaution)
+            render_to_response('email_anonymous.html', RequestContext(request))
+    
 
 def save(request):
     """Implements save share to history."""

@@ -1,6 +1,10 @@
 {% load i18n %}
 {% comment %}
 anonymous_share.html -- Implements anonymous sharing.
+
+Why two templates (for authenticateed vs. anonymous)? Simple: if your site 
+allows logins, you should add promotional content to encourage users to create 
+an account.
 {% endcomment %}
 
 {% extends "dialog.html" %}
@@ -17,3 +21,6 @@ anonymous_share.html -- Implements anonymous sharing.
 	  &nbsp;<button type="reset"class="btn">{% trans "reset" %}</button>
     </form>
 {% endblock content %}
+{% block promo %}
+  <p>Create an account and keep track of who you have shared with.</p>
+{% endblock promo %}
