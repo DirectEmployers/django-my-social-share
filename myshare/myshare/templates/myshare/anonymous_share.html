@@ -1,0 +1,19 @@
+{% load i18n %}
+{% comment %}
+anonymous_share.html -- Implements anonymous sharing.
+{% endcomment %}
+
+{% extends "dialog.html" %}
+{% block title %}{% trans "Social Share" %}{% endblock title %}
+{% block content %}
+   <h1>{% trans "Social Share Link" %}</h1>
+    <p>
+    {% trans "Use the following to create a MyUrl. Any values below are based on the defaults from example.settings.py." %} 
+    </p>
+    <form action="" method="post">
+    {% csrf_token %}
+    {% include 'includes/form-error-highlight.html' %}
+    <button type="submit" class="btn primary" value="submit">{% trans "submit" %}</button>
+	  &nbsp;<button type="reset"class="btn">{% trans "reset" %}</button>
+    </form>
+{% endblock content %}
