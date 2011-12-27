@@ -40,7 +40,7 @@ def share_not_authenticated(request):
     how sharing tags are implemeted. 
     """    
 
-    render_to_response('anonymous_share.html)
+    render_to_response('anonymous_share.html')
 
 @login_required()
 def share_authenticated(request):
