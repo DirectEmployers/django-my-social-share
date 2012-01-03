@@ -64,3 +64,5 @@ def show_bookmark_links(context, title, object_or_url, description=""):
                                         'image_url': urlquote(image_url)
                                        }
     return {'bookmarks':bookmarks, 'MEDIA_URL': context['MEDIA_URL']}
+
+    

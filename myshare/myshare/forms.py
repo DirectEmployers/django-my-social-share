@@ -2,9 +2,8 @@
 forms.py -- implements forms for my social share
 """
 
-from django import forms
 from django.forms import ModelForm
-from myshare.models import Network, Share
+from myshare.models import Share
 
 class EmailSaveFormAuthenticated(ModelForm):
     """Implements email form where user can customize the message
