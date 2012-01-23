@@ -5,7 +5,9 @@ backends.py -- implements a more universal social api that abstracts away the
                is *not* implemented here by design. Use this API once you have
                consumer keys for a user.
                
-               Supported networks: Facebook, Twitter and LinkedIn.
+               Supported networks: Facebook, Twitter, LinkedIn and Debug.
+               
+               About the debug backend: it writes to stdio. 
 """
                
 class ShareError(Exception):
@@ -21,17 +23,21 @@ class ShareBackend(object):
     """Social Sharing API. 
     
     To write a new backend, implement at the minimum """
-    def __init__(self, api_token, api_key, consumer_key, consumer_secret))
+    def __init__(self, api_token, api_secret,
+                 consumer_token="", consumer_secret=""):
         """Constructor
 
-        parameters:
+        Parameters:
+        api_token -- a valid oauth api token. This is your app's token.
+        api_secret -- a valid oauth api secret. This is your app's secret.
+        consumer_token -- optional consumer token.
+        consumer_secret -- optional consumer secret.
         """
-        api_token
-        api_key
-        consumer_key
-        consumer_secret
-        self.backends = backends
-
+        self.api_token = api_token.strip()
+        self.api_secret = api_secret.strip()
+        self.consumer_token = consumer_token.strip() or None
+        self.consumer_secret = consumer_secret.strip() or None
+    
     def share(self, headline, excerpt='', message='', url='', image_url=''):
         """ Executes social network share""" 
         self.headline = headline.strip()
@@ -42,7 +48,7 @@ class ShareBackend(object):
         self._share()
 
     def send_message(self, subject, to=[], message='', url='', image_url=''):
-        """sends message using social network
+        """Sends message using social network. 
 
         parameters:
 
@@ -52,42 +58,21 @@ class ShareBackend(object):
         url -- url to include with message
         image_url -- url to image to include with message
         """
-
         # Tidy up
         self.to = to
         self.subject = subject.strip()
         self.message = message.strip()
-        try: 
-            self.backends.get('twitter' {})
-        except:
-            self.tweet =''
-        else:
-            self.tweet = _clean_tweet(
-                use_tco = self.backends.get('twitter', {}).get('use_tco', {}) or False)
         self.url = url.strip()
         self.image_url=image_url.strip() 
         # Send it.
         self._send_message()
         
-    def _clean_tweet(self, use_tco=True):
-        """Creates tweets by truncating subject at appropriate length.
-        
-        Length is calculated using the length of a t.co URL or the provided URL
-        depending the use_tco parameter. 
-        """
-        
-        if use_tco:
-            length = 160 - 19
-            tweet = u'%s %s' % self.subject[0:length], self.url
-        else:
-            length = 160-len(self.url)-1
-            tweet = u'%s %s' % self.subject[0:length], self.url
-        return tweet
-
     def _send_message(self):
+        """Sends message: Like the goggles, does nothing."""
         pass
 
     def _share(self):
+        """Shares. Like the goggles, does nothing."""
         pass
 
 class DebugBackend(ShareBackend):
@@ -95,7 +80,7 @@ class DebugBackend(ShareBackend):
 
     def _share(self):
         """Does social share"""
-        print "token        ", self.backends.get('debug', {}).get('token', {})
+        print "token        ", self.
         print "secret     ", self.backends.get('debug', {}).get('secret', {})
         print "headline:   ",self.headline
         print "excerpt:   ", self.excerpt or None
@@ -113,6 +98,7 @@ class DebugBackend(ShareBackend):
         print "message:   ",self.message or None
         print "url:       ",self.url or None
         print "image_url: ",self.image_url or None        
+
 
 class LinkedinBackend(ShareBackend):
     """Implements LinedIn Sharing using python-linkedin.
@@ -172,15 +158,28 @@ class TwitterBackend(ShareBackend):
 
     from tweepy import API, OAuthHandler
     # Set api and consumer Oauth
-    auth = OAuthHandler(self.backends.get('twitter', {}).get('key', {}),
-                        self.backends.get('twitter', {}).get('secret'))
-    auth.set_access_token(self.backends.get('twitter', {}).get('api_key', {}),
-                          self.backends.get('twitter', {}).get('api_secret', {}))    
+    auth = OAuthHandler(self.consumer_token, self.consumer_secret)
+    auth.set_access_token(self.api_token, self.api_secret)
     # Set up API
     api = API(auth)
 
+    def send_message(self, use_tco = 'true'):
+        """Processes and sends direct message.
+        
+        parameters:
+        
+        use_tco -- use the t.co url shortner
+        """
+        self.subject = subject.strip()
+        self.message = message.strip()
+        self.url = url.strip()       
+        # Use url t.co url shortner?
+        if self.tweet != '':
+            self.tweet = _clean_tweet(use_tco=use_tco or False)    
+        _send_message()
+    
     def _send_message(self):
-        """Implemets tweepy send message.
+        """Implemets tweepy send direct message.
 
         Note: to is a list of Twitter IDs or Twitter usernames.
         Note: Twitter usernames can change, Twitter IDs do not.
@@ -193,7 +192,22 @@ class TwitterBackend(ShareBackend):
                 self.api.send_direct_message(user=t, text=self.tweet)
             except:
                 pass
-    
+
+    def _clean_tweet(self, use_tco=True):
+        """Creates tweets by truncating subject at appropriate length.
+        
+        Length is calculated using the length of a t.co URL or the provided URL
+        depending the use_tco parameter. 
+        """
+        
+        if use_tco:
+            length = 160 - 19
+            tweet = u'%s %s' % self.subject[0:length], self.url
+        else:
+            length = 160-len(self.url)-1
+            tweet = u'%s %s' % self.subject[0:length], self.url
+        return tweet
+
     def _share(self):
         """Implements "sharing" on twitter which is exactly like tweeting.
         
