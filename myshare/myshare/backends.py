@@ -110,21 +110,23 @@ class LinkedinBackend(ShareBackend):
     visibility -- "connections_only", "anyone" (default) 
     """
 
-    # instantiate a linkedin API.
+    # instantiate a linkedin API. 
     from linkedin import linkedin
-    api = linkedin.LinkedIn(api_key=self.backends.get('linkedin', {}).get('api_key', {}),
-                            api_secret=self.backends.get('linkedin', {}).get('api_secret', {}), 
+    # First instantiate the api object.
+    api = linkedin.LinkedIn(api_key=self.api_token, api_secret=self.api_secret,
                             callback_url='callback_url')
-    api._access_token = self.backends.get('linkedin', {}).get('key', {})
-    api._access_secret = self.backends.get('linkedin', {}).get('secret', {})
+    # Second, force the api to use a stored token/secret instead of getting one.
+    api._access_token = self.consumer_token
+    api._access_secret = self.consumer_secret
 
-    def _share(self):
+    def _share(self, connections_only=True):
         """Shares a URL via LinkedIn's API. No web browser required."""
-        # set visibility to connections-only or as specified.
-        try: 
-            v = self.backends.get('linkedin',{}).get('visibility')
-        except:
-            v = "connections-only"
+        # set visibility to connections-only or something else...
+        if connections_only:
+            v = 'connections-only'
+        else:
+            v = 'everyone'
+            
         result = self.api.share_update(comment=self.message, 
                                        title=self.headline,
                                        submitted_url=self.url, 
