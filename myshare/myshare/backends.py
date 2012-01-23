@@ -80,18 +80,18 @@ class DebugBackend(ShareBackend):
 
     def _share(self):
         """Does social share"""
-        print "token        ", self.
-        print "secret     ", self.backends.get('debug', {}).get('secret', {})
-        print "headline:   ",self.headline
-        print "excerpt:   ", self.excerpt or None
-        print "message:   ", self.message or None
-        print "url:       ", self.url or None
-        print "image_url: ", self.image_url or None        
+        print "consumer token ", self.consumer_token
+        print "consumer secret", self.consumer_secret
+        print "headline:      ",self.headline
+        print "excerpt:       ", self.excerpt or None
+        print "message:       ", self.message or None
+        print "url:           ", self.url or None
+        print "image_url:     ", self.image_url or None        
 
     def _send_message(self):
         """sends message"""
-        print "token        ", self.backends.get('debug', {}).get('token', {})
-        print "secret     ", self.backends.get('debug', {}).get('secret', {})
+        print "consumer token  ", self.consumer_token
+        print "consumer secret ", self.consumer_secret
         for t in self.to:
             print "to:        ", t
         print "subject:   ",self.subject
