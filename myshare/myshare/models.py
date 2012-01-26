@@ -21,7 +21,26 @@ STATUS_CHOICES = (
     (403, 'Oauth Consumer Key Failure'), # Authentication failure
     )
 
+NETWORKS_CHOICES = []
+for net in socialshare.backends.keys():
+    NETWORKS_CHOICES.append((net,net,))
 
+class Networks(models.Model):
+    """Manages available list of networks.
+    
+    Attributes:
+     - name -- Name of network (all lowercase, no spaces)
+    """
+    name = models.CharField(_("Social Network Name"), choices=NETWORKS_CHOICES,
+                            max_length=28, unique=True, 
+                            help_text=_("Name of social network all lowercase"))
+                            
+    def save(self, force_insert=False, force_update=False):
+        """Saves model, forces lowercase for name"""
+        #self.name.lower()
+        super(Networks, self).save(force_insert, force_update)
+        
+        
 class Share(models.Model):
     """Keeps sharing history
     
@@ -54,8 +73,8 @@ class Share(models.Model):
     external_site = models.URLField(_('External Site'), max_length=100, 
         null=True, blank=True, help_text=_("Domain of external site."))
     # network should be the backend name from pysocialshare
-    network = models.CharField(_("Social Network"), max_length=24, 
-        help_text=_('Network share was made on.'))
+    social_networks = models.ManyToManyField(Networks,
+        related_name=_("Share to Network"))
     # Content
     title = models.CharField(_('Title Text'), max_length=128, null=True,
                              blank=True)
@@ -79,12 +98,38 @@ class Share(models.Model):
         blank=True, help_text=_("Descriptive title for the link."))
     image_url_description= models.TextField(_("URL Description"), max_length=400,
         null=True, blank=True, help_text=_("Text description of the link."))
-    title = models.CharField(_('Title Text'), max_length=128, null=True,
-        blank=True)
-
     # TODO: add a few additional privacy options. hence the int instad of bool
     privacy = models.IntegerField(_('Privacy'), choices=PRIVACY_CHOICES, 
         default=1, help_text=_('Private shares are only visible to you.'))
     
+    def share(self):
+        """Performs social share"""
+        pass
+    
+    def save(self, force_insert=False, force_update=False):
+        """Saves model, updates self.status"""
+        
+        # Automatically update the status
+        if self.status == 201:
+            clean = len(self.title) > 40
+            clean += len(self.url) > 16
+            clean += len(self.image_url) > 16
+            # set staus to ready to share
+            if clean != False:
+                self.status = 202
+        super(Share, self).save(force_insert, force_update)
+    
+    
     def __unicode__(self):
-        return u'%s (%s)' % self.headline, self.url
+        return u'%s (%s)' % self.title, self.url
+    
+class History(models.Model):
+    """Records history of shares"""
+    share = models.ForeignKey(Share, related_name=_("SharedContent"))
+    user = models.ForeignKey(User, db_index=True)
+    network = models.ForeignKey(Networks, related_name=_("On Social Network"),
+                                db_index=True)
+    created = models.DateTimeField(_('Created'), auto_now_add=True,
+        help_text=_("Datestamp of share."),db_index=True)
+    
+    

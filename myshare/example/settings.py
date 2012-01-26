@@ -116,11 +116,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myshare',
+    'example.app',
 )
 
 # Django Social Share Settings
-# SHARE_DEFAULT_IMG_URL = 'http://path.to/image.png'
-# SHARE_DEFAULT_TITLE = 'The title you want automatically inserted in shares'
-# SHARE_DEFAULT_DESCRIPTION = 'Text you want automatically in description'
+SHARE_DEFAULT_IMG_URL = 'http://path.to/image.png'
+SHARE_DEFAULT_TITLE = 'The title you want automatically inserted in shares'
+SHARE_DEFAULT_DESCRIPTION = 'Text you want automatically in description'
 # SHARE_DEFAULT_MESSAGE = 'Default message text'
 # SHARE_NOTE='Default note to be saved with link (not shared)'

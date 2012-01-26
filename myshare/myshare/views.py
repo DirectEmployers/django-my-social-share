@@ -3,12 +3,31 @@ views.py -- Implements UI for django-my-social-share app
 """
 
 from django.shortcuts import render_to_response
+from django.views.generic import DetailView, ListView, FormView
 from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.utils.translation import ugettext, ugettext_lazy as _
+from myshare.models import History, Share, Networks
 
+class MyShareHistory(ListView):
+    """implements a simple history view"""
+    context_object_name = History
+    model = History
+    
+class MyShares(ListView):
+    """implements a list of all shares"""
+    context_object_name = Shares
+    model = Shares
 
+# Don't put this on the internet without restricting access unless you want
+# to be phish/spam/scam central
+@login_required
+def create_share (request, share_me_url=""):
+    """implements a quick share me url"""
+    if request.method == "GET":
+        # Display a share model form 
+    
 def share(request):
     """Implements view when share button is clicked
     
