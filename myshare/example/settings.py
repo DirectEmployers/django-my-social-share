@@ -116,7 +116,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myshare',
-    'example.app',
+    'app',
 )
 
 # Django Social Share Settings

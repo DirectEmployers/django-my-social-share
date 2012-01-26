@@ -10,15 +10,6 @@ from django.template import RequestContext
 from django.utils.translation import ugettext, ugettext_lazy as _
 from myshare.models import History, Share, Networks
 
-class MyShareHistory(ListView):
-    """implements a simple history view"""
-    context_object_name = History
-    model = History
-    
-class MyShares(ListView):
-    """implements a list of all shares"""
-    context_object_name = Shares
-    model = Shares
 
 # Don't put this on the internet without restricting access unless you want
 # to be phish/spam/scam central

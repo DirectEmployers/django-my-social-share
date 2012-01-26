@@ -1,10 +1,17 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
-
 from django.contrib import admin
+
+from app.views import 
+
+
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^/', views.home, name='home'),
+    (r'^/api/(?P<url>.*)$', views.api, name='api'),
+    (r'^/history/', 'views.history', name='history'),
     (r'^myshare/', include('myshare.urls')),
     (r'^admin/', include(admin.site.urls)),
 )
