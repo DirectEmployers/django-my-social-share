@@ -171,3 +171,4 @@ media/css/*.r*.css
 *.egg-info
 secrets.py
 secret.py
+pg.py

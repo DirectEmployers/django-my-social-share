@@ -13,7 +13,9 @@ backends.py -- implements a more universal social api that abstracts away the
 # Put all your keys in secret.py... and make sure you put secret.py in
 # your VCS's ignore file.  
 from secrets import *
-              
+    
+backends ={}    
+          
 class ShareError(Exception):
     """Used for social share fails."""
     def __init__(self):
@@ -102,7 +104,8 @@ class ShareBackend(object):
     def _share(self):
         """Shares. Like the goggles, does nothing."""
         pass
-
+    
+    
 class DebugBackend(ShareBackend):
     """Implements sharing with stdio. stdio knows where you live.
     
@@ -135,7 +138,9 @@ class DebugBackend(ShareBackend):
         print "image_url: ",self.image_url or None        
 
 
-class LinkedinBackend(ShareBackend):
+register_share_backend('debug', 'DebugBackend')
+
+class LinkedInBackend(ShareBackend):
     """Implements LinedIn Sharing using python-linkedin.
 
     Backend Settings:
@@ -193,6 +198,7 @@ class LinkedinBackend(ShareBackend):
         if result == False:
             raise ShareError, self.api.get_error()
 
+register_share_backend('linkedin','LinkedInBackend')
 
 class TwitterBackend(ShareBackend):
     """Implements Tweepy API 
@@ -246,6 +252,8 @@ class TwitterBackend(ShareBackend):
                 self.api.send_direct_message(user=t, text=self.tweet)
             except:
                 pass
+
+register_share_backend('twitter','TwitterBackend')
 
     def _clean_tweet(self, use_tco=True):
         """Creates tweets by truncating subject at appropriate length.
@@ -307,6 +315,12 @@ class FacebookBackend(ShareBackend):
         if response is None:
             raise ShareError, "Facebook outbox Failure"
 
+register_share_backend('facebook','FacebookBackend')
+
+def register_share_backend(name, func_name):
+    """Registers a new social sharing backend"""
+    backends['name'] = func_name
+    
 class Share(object):
     """Shares a message with with multiple social media sites
     
@@ -315,8 +329,8 @@ class Share(object):
     the targets dict.
     
     Parameters: 
-    targets -- dict of shares as follows:
-               {'backend':{'setting':'value'}}
+    targets -- list of shares as follows:
+               [{'backend':'network','setting':'value'},...]
                where backend is facebook, linkedin, twitter or debug and
                settings are key value pairs specific to the share 
                (including OAUTH token/secrets).
@@ -328,8 +342,10 @@ class Share(object):
         # check that we have targets.
         if targets == {}:
             raise ShareError, "No targets specified"
-        
-        
+        # process each target
+        for t in targets:
+            func = getattr(backends[t.network], __init__)
+                
     def add_backend(*args, **kwargs):
         pass
 
