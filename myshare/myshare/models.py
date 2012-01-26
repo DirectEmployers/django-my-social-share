@@ -21,6 +21,7 @@ STATUS_CHOICES = (
     (403, 'Oauth Consumer Key Failure'), # Authentication failure
     )
 
+
 class Share(models.Model):
     """Keeps sharing history
     
@@ -30,7 +31,6 @@ class Share(models.Model):
     - site -- django sites framework object
     - external_site -- URL for external website
     - created -- datestamp for share
-    - network -- network shared on.
     - url -- Link shared
     - url_title -- the title of the URL 
     - url_description -- the description of the URL
@@ -80,7 +80,7 @@ class Share(models.Model):
     image_url_description= models.TextField(_("URL Description"), max_length=400,
         null=True, blank=True, help_text=_("Text description of the link."))
     title = models.CharField(_('Title Text'), max_length=128, null=True,
-                             blank=True)
+        blank=True)
 
     # TODO: add a few additional privacy options. hence the int instad of bool
     privacy = models.IntegerField(_('Privacy'), choices=PRIVACY_CHOICES, 
