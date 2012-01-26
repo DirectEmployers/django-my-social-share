@@ -1,100 +1,90 @@
 """
 models.py -- implements models for My Social Share App
 """
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-
-NETWORK_SHARE_URL_HELP = _("""The URL of the network URL with codes %(url)s, 
-    %(title)s, %(description)s,%(image)s and %(message)s source codes""")
-                           
-STATUS_CHOICES = (
-    (1, 'Inactive'),
-    (2, 'Active'),
-)
+import socialshare
 
 PRIVACY_CHOICES = (
-    (1, 'Public'),
-    (2, 'Private'),
-)
+    (1, 'Private'),
+    (2, 'Public'),
+    )
 
-class Network(models.Model):
-    """ Stores network definitions for social networks.
-    
-    Allows admin to define and manage social networks using Django Admin.
-    
-    Attributes:
-    
-    - name -- name of social network
-    - short_name -- max 12 character name, icon name must be short_name.png
-    - share_url -- the URL used to share links
-    - message_url -- the URL used for sending messages on the social network
-    - image_url -- URL of image to ALWAYS provide to this network.
-    - active -- Indicates if network should be shown.
-    - auth_required -- Indicates if user has to be authendicated with network
-    """
-    
-    name = models.CharField(_('Name of Social Network'), max_length=40,
-        help_text=_('The name of the social network. Eg. Facebook, LinkedIn'))
-    short_name = models.CharField(_('Short Name for Network'), max_length=12,
-        help_text=_('Short identifier for network with no space.'))
-    share_url = models.CharField(_('Share URL'), max_length=400, blank=True, 
-        null=True, help_text=NETWORK_SHARE_URL_HELP)
-    messaging_url = models.CharField(_('Messaging URL'), max_length=400, 
-        blank=True, null=True,
-        help_text=_('URL with %url, %title, and %message source codes'))
-    image_url = models.URLField(_('URL of image'), null=True, blank=True,
-        help_text=_('Default picture for shares to this network'))
-    status = models.IntegerField(_('Active'), choices=STATUS_CHOICES,
-                                 default=2)
-    auth_required = models.BooleanField(_('Authentication Required'),
-        help_text=_('Users must be logged in to the network to see'))
-    
-    def __unicode__(self):
-        return u'%s (%s)' % self.name, self.short_name
-    
-        
+STATUS_CHOICES = (
+    (30, 'Scheduled for future share'), 
+    (200, 'OK - Shared'), # Shared
+    (201, 'Incomplete - Conent not complete'), # Created
+    (202, 'Accepted - Approved, but not shared'), # Accepted for processing
+    (400, 'Bad Request'), # Failed API sharte
+    (403, 'Oauth Consumer Key Failure'), # Authentication failure
+    )
+
 class Share(models.Model):
     """Keeps sharing history
     
     Attributes:
     
-    - user -- user who created the link
+    - user -- user who created the share
     - site -- django sites framework object
     - external_site -- URL for external website
     - created -- datestamp for share
     - network -- network shared on.
     - url -- Link shared
-    - myurl -- MyUrl- use to track link click metrics
+    - url_title -- the title of the URL 
+    - url_description -- the description of the URL
     - title -- Title of share (where appropriate)
     - excerpt -- Excerpt or description text shared
     - message -- Message text
-    - image -- URL pointing to shared image
+    - image_url -- URL pointing to shared image
+    - image_url_title -- title of the image
+    - image_url_description -- The description of the image
     - private -- indicates if share history should be public (future)
+    - to -- List of recipients
     """
     
     user = models.ForeignKey(User, null=True, blank=True, 
         help_text=_('User who created share'))
+    status = models.IntegerField(_("Status"),choices=STATUS_CHOICES, 
+        default=201, help_text=_("Share status"))
     site = models.ForeignKey(Site, null=True, blank=True)
-    external_site = models.URLField(_('External Site'), max_length=100, 
-                                      null=True, blank=True)
     created = models.DateTimeField(_('Created'), auto_now_add=True)
-    network = models.ForeignKey(Network, related_name="Social Shares", 
+    # This is used if we are not linking to an in-network site
+    external_site = models.URLField(_('External Site'), max_length=100, 
+        null=True, blank=True, help_text=_("Domain of external site."))
+    # network should be the backend name from pysocialshare
+    network = models.CharField(_("Social Network"), max_length=24, 
         help_text=_('Network share was made on.'))
-    url = models.URLField(_('Shared URL'), max_length=400, 
-        help_text=_('Link that was shared.'))
+    # Content
     title = models.CharField(_('Title Text'), max_length=128, null=True,
                              blank=True)
-    excerpt = models.CharField(_('Excerpt Text'), max_length=400, null=True,
+    excerpt = models.CharField(_('Excerpt Text'), max_length=255, null=True,
         blank=True, help_text=_('Text supplied to network with share'))
     message = models.TextField(_('Message Text'), null=True, blank=True,
         help_text=_('Message text shared.'))
-    image = models.URLField(_('Image Shared'), max_length=400, null=True,
+    tweet = models.CharField(_("Tweet"), max_length=200, null=True, 
+        blank=True, help_text=_("Short message for twitter"))
+    # Shared link (this is the link to the content, even if it is a picture
+    url = models.URLField(_('Shared URL'), max_length=400, 
+        help_text=_('Link that was shared.'))
+    url_title = models.CharField(_("URL Title"), max_length=128, null=True, 
+        blank=True, help_text=_("Descriptive title for the link."))
+    url_description= models.TextField(_("URL Description"), max_length=400,
+        null=True, blank=True, help_text=_("Text description of the link."))
+    # Shared image (this is usually a thumbnail that goes with a share)
+    image_url = models.URLField(_('Image Shared'), max_length=400, null=True,
         blank=True, help_text=_('URL of image shared'))
+    image_url_title = models.CharField(_("URL Title"), max_length=128, null=True, 
+        blank=True, help_text=_("Descriptive title for the link."))
+    image_url_description= models.TextField(_("URL Description"), max_length=400,
+        null=True, blank=True, help_text=_("Text description of the link."))
+    title = models.CharField(_('Title Text'), max_length=128, null=True,
+                             blank=True)
+
+    # TODO: add a few additional privacy options. hence the int instad of bool
     privacy = models.IntegerField(_('Privacy'), choices=PRIVACY_CHOICES, 
         default=1, help_text=_('Private shares are only visible to you.'))
     
     def __unicode__(self):
-        return u'%s (%s)' % self.network.name, self.excerpt 
+        return u'%s (%s)' % self.headline, self.url
