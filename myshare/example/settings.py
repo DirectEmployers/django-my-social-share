@@ -1,3 +1,19 @@
+# remove prior to shipping
+import os
+import sys
+
+import django.views.debug
+
+def wing_debug_hook(*args, **kwargs):
+    if __debug__ and 'WINGDB_ACTIVE' in os.environ:
+        exc_type, exc_value, traceback = sys.exc_info()
+        sys.excepthook(exc_type, exc_value, traceback)
+    return old_technical_500_response(*args, **kwargs)
+
+old_technical_500_response = django.views.debug.technical_500_response
+django.views.debug.technical_500_response = wing_debug_hook
+# end remove
+
 # Django settings for example project.
 
 DEBUG = True
@@ -88,7 +104,7 @@ SECRET_KEY = 'g2_39yupn*6j4p*cg2%w643jiq-1n_annua*%i8+rq0dx9p=$n'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+     'django.template.loaders.eggs.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,6 +121,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    '/home/indymike/projects/django-my-social-share/myshare/example/templates/'
 )
 
 INSTALLED_APPS = (
@@ -125,3 +142,4 @@ SHARE_DEFAULT_TITLE = 'The title you want automatically inserted in shares'
 SHARE_DEFAULT_DESCRIPTION = 'Text you want automatically in description'
 # SHARE_DEFAULT_MESSAGE = 'Default message text'
 # SHARE_NOTE='Default note to be saved with link (not shared)'
+

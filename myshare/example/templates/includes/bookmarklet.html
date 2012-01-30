@@ -6,7 +6,7 @@ bookmarklet.html -- implements a simple bookmarklet
     var mj_url = document.location;
     mj_post=document.createElement('form');
     mj_post.method='get';
-    mj_post.action='{% url api %}';
+    mj_post.action='{% url app.api %}';
     mj_postValue = document.createElement('input');
     mj_postValue.setAttribute('name','url');
     mj_postValue.setAttribute('value',mj_url);

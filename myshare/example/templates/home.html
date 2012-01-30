@@ -1,0 +1,10 @@
+{% load i18n %}
+{% comment %}
+home.html -- example app home page
+{% endcomment %}
+{% block content %}
+<h2>{% trans "My-Social-Share Bookmarklet Example App" %}</h2>
+<p>{% trans "Drag this link to your browser's toolbar:" %} {% include 'includes/bookmarklet.html' %}.</p>
+<h3>{% trans "To share, just drag a link or page to the bookmarklet." %}</h3>
+<p><i>For this app, you'll have to have an oauth api key and consumer key set in settings.py.</i></p>
+{% endblock content %}

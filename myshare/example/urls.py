@@ -2,22 +2,18 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib import admin
 
-from app.views import 
-
-
-
+from app.views import home, MyShareHistory, MyShares
+from myshare.views import new
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^/', views.home, name='home'),
-    (r'^/api/(?P<url>.*)$', views.api, name='api'),
-    (r'^/history/', 'views.history', name='history'),
-    (r'^myshare/', include('myshare.urls')),
-    (r'^admin/', include(admin.site.urls)),
-)
-
-urlpatterns = urlpatterns + patterns('',
-    (r'^static/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': settings.MEDIA_ROOT}),
-    ) if settings.DEBUG else urlpatterson
+                       
+     url(r'^$', 'app.home', name='home'),
+     url(r'^/api/(?P<url>.*)$', 'app.api', name='api'),
+     url(r'^/history/', MyShareHistory.as_view() , name='history'),
+     url(r'^/new/', new, name='new'),
+     url(r'^myshare/', MyShares.as_view(), name='share'), 
+     #url(r'', 'myshare.urls'),
+     url(r'^admin/', include(admin.site.urls)),
+    )
 
