@@ -1,13 +1,66 @@
 {% load i18n %}
 {% comment %}
-base.html -- rudimentary base file for example apps 
-{% endcomment %}
+base.html -- implements example page.  
 
-<html>
+Where practical, the HTML structure is separated from content... so to override
+content only, override whatever-content in your template. To override the 
+structure of the page (e.g. single column for content) you would override 
+whatever.
+
+This is based on the DirectEmployers Foundation UI Framework and Twitter's 
+excellent Bootstrap Framework.
+{% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>{% block title %}MyUrls{% endblock title %}</title>
+  {% block meta %}
+    {% include "includes/meta.html" %}
+  {% endblock meta %}
+  {% block meta-append %}
+  {% endblock meta-append %}
 </head>
 <body>
-{% block content %}{% endblock content %}
+{% block page %}
+{% block topbar %}
+  {% include "includes/topbar.html" %}
+{% endblock topbar %}
+{% block subpage %}
+<section><div class="section subpage">
+  {# Show messages only if we have messages to show #}
+  {% block message %}
+     {% include "includes/message.html" %}
+  {% endblock message %}
+  {# Header is full content area width #}
+  {% block header %}
+  <div class="wrapper">
+    <div class="row">
+      <div class="span16">
+      {% block header-content %}
+	<h1>{{ title }}</h2>
+      {% endblock header-content %}
+      </div>
+    </div>
+  </div>
+  {% endblock header %}
+  {# to change layouts, override content-area in your template #}
+  {# for custom content, just override the content block #}
+  {% block content-area %}
+    <div class="wrapper">
+      <div class="row">
+	<div class="span-three-fifths">
+	  {% block content %}
+	  Put yo content here
+	  {% endblock content %}
+	</div>
+      </div>
+    </div>
+  {% endblock content-area %}
+</div></section>
+{% endblock subpage %}
+{# Footer Starts Here #}
+{% block footer %}
+  <footer><div class="footer">{% block footer-content %}{% endblock footer-content %}</div></footer>
+{% endblock footer %}
+{% endblock page %}
 </body>
 </html>

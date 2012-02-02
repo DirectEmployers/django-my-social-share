@@ -1,0 +1,13 @@
+{% load i18n %}
+{% comment %}
+meta.html -- default page metadata 
+{% endcomment %}
+<title>{% block title-content %}{{ title }}{% endblock title-content %}</title>
+<meta name="description" content="{{ description }}">
+<meta name="author" content="DirectEmployers Foundation">
+{# The following lines load the DE framework from the CDN #}
+<meta name="viewport" content="width=device-width"/>
+<link href="http://css.nlx.org/framework/css/def.ui.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="http://js.nlx.org/framework/js/def.ui.core.js"></script>
+<link href="http://png.nlx.org/def-static/images/favicon.ico" rel="shortcut icon"> 
+

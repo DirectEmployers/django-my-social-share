@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% comment %}
+share.html -- implements share dialog
+{% endcomment %}
+{% block meta-append %}
+     <script src="http://js.nlx.org/framework/js/def.ui.bootstrap.modal.js" type="text/javascript"></script>
+<script>
+
+</script>
+
+<style>
+
+</style>
+{% endblock meta-append %}
+{% block content %}
+    <div id="dialog-share" class="modal hide fade">
+        <div class="modal-header">
+            <a data-dismiss="modal" class="close">×</a>
+            <h3>Share</h3>
+        </div>
+        <div class="modal-body">
+            <form action="" method="POST">
+            <div class="socialshare-networks">
+            {% for net in networks %}
+                <a href="#" id="{{ net }}" class="socialbutton">{{net}}</a>
+            {% endfor %}
+            </div>
+            {% include "includes/form-error-highlight.html" %}
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn primary" value="submit">{% trans "Save" %}</button>            
+            </form>                    
+        </div>
+    </div>
+    <a class="btn" data-toggle="modal" href="#dialog-share">{% trans "Share" %}</a>
+{% endblock content %}

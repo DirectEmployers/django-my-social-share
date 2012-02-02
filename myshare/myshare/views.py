@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.utils.translation import ugettext, ugettext_lazy as _
 from myshare.models import History, Share, Networks
-from myshare.forms import Share
 from myshare.helpers import get_share_settings
 
 # Don't put this on the internet without restricting access unless you want

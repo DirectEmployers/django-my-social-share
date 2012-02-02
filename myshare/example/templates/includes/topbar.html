@@ -1,0 +1,15 @@
+{% load i18n %}
+{% comment %}
+topbar.html -- Implements basic my.jobs nav.
+{% endcomment %}
+<div class="topbar" data-dropdown="dropdown">
+  <div class="topbar-inner">
+    <div class="container">
+      <h3><a href="/">MySocial Share</a></h3> 
+      <ul class="menu">
+	  <li class="active"><a href="{% url example-home %}">{% trans "home" %}</a></li>
+	  <li class="active"><a href="{% url example-simple %}">{% trans "simple share" %}</a></li>	  
+      </ul> 
+    </div>
+  </div><!-- /topbar-inner -->
+</div>
