@@ -12,7 +12,6 @@ from forms import MakeShare
 from django.core.validators import URLValidator
 from myshare.models import History, MyShare
 from app.forms import MakeShare, SimpleShare
-from myshare.socialshare import backends
 
 class MyShareHistory(ListView):
     """implements a simple history view"""
@@ -49,14 +48,13 @@ def simple_share(request):
     if request.method == "POST":
         form = SimpleShare(request.POST)
         if form.is_valid():
-            d = form.cleaned_data
-            # Here is where we do the save
-            
-            share =
+            share=MyShare()
                 
             share.save()
     else:
         form = SimpleShare()
     return render(request, 'share.html', 
-                  {'title':_("Create Share"),'networks':backends,'form':form})
+                  {'title':_("Create Share"), 
+                   'networks':('twitter','facebook','linkedin'), 
+                   'form':form})
     

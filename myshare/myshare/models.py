@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from socialshare import register_share_backend, Share
+from socialshare import available_backends, register_share_backend, SocialShare
 
 PRIVACY_CHOICES = (
     (1, 'Private'),
@@ -22,7 +22,7 @@ STATUS_CHOICES = (
     )
 
 NETWORKS_CHOICES = []
-for net in socialshare.backends.keys():
+for net in available_backends.keys():
     NETWORKS_CHOICES.append((net,net,))
 
 class Networks(models.Model):
@@ -104,21 +104,36 @@ class MyShare(models.Model):
     privacy = models.IntegerField(_('Privacy'), choices=PRIVACY_CHOICES, 
         default=1, help_text=_('Private shares are only visible to you.'))
     
-    def do_share(self, backends):
+    def do_share(self, backends, api_token="", api_secret="", shorten_url=True):
         """Executes share with a list of backends.
+
         Arguments:
         
         backends: a list of backend dicts [{'network':'facebook', 
                                             'consumer_token':'somekey',
                                             'consumer_secret':'itssecret'},...]
+        api_token: your api token or settings.MYSHARE_API_TOKEN is used if blank
+        api_secret: your api secret or settings.MYSHARE_API_SECRET 
         """
-        # Loop throught backends
-        for backend in backends:
-            # do the share
-            try:
-                
             
-        
+            # time to do the share
+        socialshare = SocialShare(
+            api_token or settings.MYSHARE_API_TOKEN,
+            api_secret or settings.MYSHARE_API_SECRET,
+            self.title,
+            self.tweet,
+            self.message,
+            self.excerpt,
+            self.url or settings.MYSHARE_DEFAULT_URL,
+            self.url_title or settings.MYSHARE_DEFAULT_URL_TITLE,
+            self.url_description or settings.MYSHARE_DEFAULT_URL_DESCRIPTION,
+            self.image_url or settings.MYSHARE_DEFAULT_IMAGE_URL,
+            self.image_url_title or settings.MYSHARE_DEFAULT_IMAGE_URL_TITLE,
+            self.image_url_description or settings.MYSHARE_DEFAULT_IMAGE_URL_DESCRIPTION
+        )
+        socialshare.shares = backends
+        socialshare.do_bulk_share()
+
     def do_single_share(self, network, consumer_token, consumer_secret):
         """Simple way to share with a single social network
         
