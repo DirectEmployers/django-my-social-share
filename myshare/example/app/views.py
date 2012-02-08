@@ -8,11 +8,9 @@ from django.views.generic import ListView, FormView
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext, ugettext_lazy as _
-from requests import get
-from BeautifulSoup import BeautifulSoup
 from forms import MakeShare
 from django.core.validators import URLValidator
-from myshare.models import History, Share
+from myshare.models import History, MyShare
 from app.forms import MakeShare, SimpleShare
 from myshare.socialshare import backends
 
@@ -23,8 +21,8 @@ class MyShareHistory(ListView):
     
 class MyShares(ListView):
     """implements a list of all shares"""
-    context_object_name = Share
-    model = Share
+    context_object_name = MyShare
+    model = MyShare
 
 def home(request):
     """Implements home page view"""
@@ -52,8 +50,10 @@ def simple_share(request):
         form = SimpleShare(request.POST)
         if form.is_valid():
             d = form.cleaned_data
-            print d
-            # need to actually do the save here.
+            # Here is where we do the save
+            
+            share =
+                
             share.save()
     else:
         form = SimpleShare()

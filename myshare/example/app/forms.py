@@ -26,21 +26,23 @@ class MakeShare(forms.Form):
     networks = forms.MultipleChoiceField(
             choices=(('facebook','facebook'),
                      ('linkedin','linkedin'),('twitter','twitter'),),
-            widget=forms.CheckboxSelectMultiple, label=_("Select Networks"))    
+            widget=forms.CheckboxSelectMultiple, label=_("Select Networks"),
+            initial="twitter",required=False)    
     title = forms.CharField(max_length=120, 
             min_length=10, label=_("Title"),
             help_text=_("The title or headline for your share"))    
     excerpt = forms.CharField(max_length=200, min_length=20,
-        widget=forms.Textarea, help_text=_("Shorter Share"))
+        widget=forms.Textarea, help_text=_("Shorter Share"), required=False)
     description = forms.CharField(max_length=4096, min_length=0, 
         widget=forms.Textarea, help_text=_("Long message to share."))
     url = forms.URLField()
-    url_title = forms.CharField()
+    url_title = forms.CharField(label=_("Title of Link"), required=False)
     url_description = forms.CharField(max_length=255, min_length=0, 
                                       widget=forms.Textarea)
-    image_url = forms.URLField()
-    image_url_title = forms.CharField(max_length=125)
-    image_url_description = forms.CharField(max_length=4096, 
-                                            widget=forms.Textarea)
+    image_url = forms.URLField(label=_("Title of Image"), required=False,
+        
+    image_url_title = forms.CharField(max_length=125, required=False)
+    image_url_description = forms.CharField(required=False,
+        max_length=4096, widget=forms.Textarea)
     private = forms.BooleanField(label=_("Make Private"),
         help_text=_("Make this share private"))

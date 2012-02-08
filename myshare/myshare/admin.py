@@ -2,7 +2,7 @@
 admin.py -- Django admin classes for myshare
 """
 from django.contrib import admin
-from myshare.models import History, Share
+from myshare.models import History, MyShare
 
 class HistoryOption(admin.ModelAdmin):
     """Default history admin defs"""

@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-import socialshare
+from socialshare import register_share_backend, Share
 
 PRIVACY_CHOICES = (
     (1, 'Private'),
@@ -41,12 +41,13 @@ class Networks(models.Model):
         super(Networks, self).save(force_insert, force_update)
         
         
-class Share(models.Model):
+class MyShare(models.Model):
     """Keeps sharing history
     
     Attributes:
     
     - user -- user who created the share
+    - status -- workflow for share
     - site -- django sites framework object
     - external_site -- URL for external website
     - created -- datestamp for share
@@ -94,18 +95,42 @@ class Share(models.Model):
     # Shared image (this is usually a thumbnail that goes with a share)
     image_url = models.URLField(_('Image Shared'), max_length=400, null=True,
         blank=True, help_text=_('URL of image shared'))
-    image_url_title = models.CharField(_("URL Title"), max_length=128, null=True, 
-        blank=True, help_text=_("Descriptive title for the link."))
-    image_url_description= models.TextField(_("URL Description"), max_length=400,
-        null=True, blank=True, help_text=_("Text description of the link."))
+    image_url_title = models.CharField(_("URL Title"), max_length=128, 
+        null=True, blank=True, help_text=_("Descriptive title for the link."))
+    image_url_description= models.TextField(_("URL Description"), 
+        max_length=400, null=True, blank=True, 
+        help_text=_("Text description of the link."))
     # TODO: add a few additional privacy options. hence the int instad of bool
     privacy = models.IntegerField(_('Privacy'), choices=PRIVACY_CHOICES, 
         default=1, help_text=_('Private shares are only visible to you.'))
     
-    def share(self):
-        """Performs social share"""
-        pass
-    
+    def do_share(self, backends):
+        """Executes share with a list of backends.
+        Arguments:
+        
+        backends: a list of backend dicts [{'network':'facebook', 
+                                            'consumer_token':'somekey',
+                                            'consumer_secret':'itssecret'},...]
+        """
+        # Loop throught backends
+        for backend in backends:
+            # do the share
+            try:
+                
+            
+        
+    def do_single_share(self, network, consumer_token, consumer_secret):
+        """Simple way to share with a single social network
+        
+        Arguments:
+        
+        network: name of a social share backend (e.g. 'facebook or 'twitter')
+        consumer_token: Oauth consumer token
+        consumer_secret: Oauth consumer secret
+        """
+        self.do_share([{'network':network, 'consumer_token':consumer_token,
+                        'consumer_secret':consumer_secret}])
+            
     def save(self, force_insert=False, force_update=False):
         """Saves model, updates self.status"""
         
@@ -117,15 +142,15 @@ class Share(models.Model):
             # set staus to ready to share
             if clean != False:
                 self.status = 202
-        super(Share, self).save(force_insert, force_update)
-    
+        # do the save
+        super(MyShare, self).save(force_insert, force_update)
     
     def __unicode__(self):
         return u'%s (%s)' % self.title, self.url
     
 class History(models.Model):
     """Records history of shares"""
-    share = models.ForeignKey(Share, related_name=_("SharedContent"))
+    share = models.ForeignKey(MyShare, related_name=_("SharedContent"))
     user = models.ForeignKey(User, db_index=True)
     network = models.ForeignKey(Networks, related_name=_("On Social Network"),
                                 db_index=True)
