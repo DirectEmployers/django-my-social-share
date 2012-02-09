@@ -158,6 +158,8 @@ Thumbs.db
 # Secret stuff. Shhhhh.
 secret.py
 secrets.py
+localsettings.py
+local_settings.py
 
 dev.db
 local_settings.py

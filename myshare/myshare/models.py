@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from socialshare import available_backends, register_share_backend, SocialShare
+from django.conf import settings
 
 PRIVACY_CHOICES = (
     (1, 'Private'),
@@ -21,9 +22,6 @@ STATUS_CHOICES = (
     (403, 'Oauth Consumer Key Failure'), # Authentication failure
     )
 
-NETWORKS_CHOICES = []
-for net in available_backends.keys():
-    NETWORKS_CHOICES.append((net,net,))
 
 class Networks(models.Model):
     """Manages available list of networks.
@@ -31,7 +29,7 @@ class Networks(models.Model):
     Attributes:
      - name -- Name of network (all lowercase, no spaces)
     """
-    name = models.CharField(_("Social Network Name"), choices=NETWORKS_CHOICES,
+    name = models.CharField(_("Social Network Name"), choices=settings.NETWORKS_CHOICES,
                             max_length=28, unique=True, 
                             help_text=_("Name of social network all lowercase"))
                             

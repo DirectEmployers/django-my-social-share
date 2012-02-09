@@ -136,13 +136,13 @@ INSTALLED_APPS = (
     'app',
 )
 
-# Django Social Share Settings
-SHARE_DEFAULT_URL = 'http://my.jobs'
-SHARE_DEFAULT_TITLE = 'Job search power tools.'
-SHARE_DEFAULT_DESCRIPTION = 'The right job can change your life.'
-SHARE_DEFAULT_IMAGE_URL = 'http://my.jobs/'
-SHARE_DEFAULT_IMAGE_TITLE = 'The title you want automatically inserted in shares'
-SHARE_DEFAULT_IMAGE_DESCRIPTION = 'Text you want automatically in description'
-# SHARE_DEFAULT_MESSAGE = 'Default message text'
-# SHARE_NOTE='Default note to be saved with link (not shared)'
+try:
+    from local_settings import *
+except:
+    pass
 
+# load up your OAUTH Keys
+try:
+    from secrets import *
+except:
+    pass

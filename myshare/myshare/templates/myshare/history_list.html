@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% comment %}
+history-list.html -- implements history list view. Uses the awesome jquery 
+                     datatables plug in to make history awesome
+{% endcomment %}
+{% block meta-append %}
+    <script src="http://js.nlx.org/framework/js/def.ui.jquery.datatables.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#sharehistory').dataTable( {
+                 "sDom": "<'row'<'span8'l><'span8'f>r>t<'row'<'span8'i><'span8'p>>"
+            } );
+        } );
+    </script>
+{% endblock meta-append %}
+{% block content %}
+    {# We're using bootstrap + datatables here to make pretty history #}
+    <table cellpadding ="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="sharehistory">
+        <thead>
+        {% for item in object_list %}
+            {% for key, value in item %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        {% endfor %}
+        </thead>
+        <tbody>
+        {% for item in object_list %}
+            <tr>
+            {% for key, value in item %}
+                <td>{{ value }}</td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+        <caption>
+            {% trans "Shared item history. Click headers to sort." %}
+        </caption>
+        
+{% endblock content %}
