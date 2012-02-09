@@ -16,15 +16,16 @@ class SimpleShare(forms.Form):
     """Form handler for best UX social share"""    
     networks = forms.MultipleChoiceField(
             choices=NETWORK_CHOICES,
-            widget=forms.MultipleHiddenInput, 
+            widget=forms.SelectMultiple, 
             label=_("Select Networks"))
     tweet = forms.CharField(max_length=118,label=_("Tweet"))
     title = forms.CharField(max_length=120, 
             min_length=10, label=_("Title"),
             help_text=_("The title or headline for your share"))    
     description = forms.CharField(max_length=4096, min_length=0, 
-            widget=forms.Textarea, help_text=_("Long message to share.")),
-    to = forms.CharField(max_length=255,label=_("To"))
+            widget=forms.Textarea(attrs={'cols': 40, 'rows': 4}), help_text=_("Long message to share."))
+    #Not just yet...
+    #to = forms.CharField(max_length=255,label=_("To"))
 
 
 class MakeShare(forms.Form):
