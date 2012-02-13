@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext, ugettext_lazy as _
 from forms import MakeShare
 from django.core.validators import URLValidator
-from myshare.models import History, MyShare
+from myshare.models import History, MyShare, Networks
 from app.forms import MakeShare, SimpleShare
 
 class MyShareHistory(ListView):
@@ -42,13 +42,28 @@ def example_api(request):
     return render(request, 'share.html', 
                   {'title':_("Create Share"),'form':form})
 
+# TODO: Move to myshare views
 @csrf_exempt
 def simple_share(request):
-    """implements the simple share dialog"""
+    """implements the simple share dialog that supports a description, title
+       tweet and some defaults out of settings.
+    """
+
     if request.method == "POST":
         form = SimpleShare(request.POST)
         if form.is_valid():
-            share=MyShare()
+            share=MyShare(user=request.user, 
+                          title=form.cleaned_data['title'],
+                          tweet=form.cleaned_data['tweet'],
+                          description=form.cleaned_data['description'],
+                          )
+            
+            
+            # Do the Share
+            for network in form.cleaned_data['networks']:
+                
+                
+                    
                 
             share.save()
     else:
