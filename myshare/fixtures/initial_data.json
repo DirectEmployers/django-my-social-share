@@ -1,0 +1,1 @@
+[{"pk": 1, "model": "myshare.networks", "fields": {"name": "facebook"}}, {"pk": 2, "model": "myshare.networks", "fields": {"name": "linkedin"}}, {"pk": 3, "model": "myshare.networks", "fields": {"name": "twitter"}}, {"pk": 4, "model": "myshare.networks", "fields": {"name": "email"}}]

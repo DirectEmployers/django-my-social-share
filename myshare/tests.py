@@ -21,7 +21,7 @@ class MyShareTests(TestCase):
         # test aftermath
         self.assertEqual(s.status, 201)
         # Add a title
-        s.title="This is Dangerous"
+        s.headline="This is Dangerous"
         s.save()
         self.assertEqual(s.status, 202)
     

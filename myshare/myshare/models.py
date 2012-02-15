@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from socialshare import available_backends, register_share_backend, SocialShare
+from socialshare import SocialShare
 from django.conf import settings
 
 class MyShareStatusError(Exception):
@@ -75,16 +75,18 @@ class MyShare(models.Model):
     status = models.IntegerField(_("Status"),choices=STATUS_CHOICES, 
         default=201, help_text=_("Share status"))
     site = models.ForeignKey(Site, null=True, blank=True)
-    created = models.DateTimeField(_('Created'), auto_now_add=True)
     # This is used if we are not linking to an in-network site
     external_site = models.URLField(_('External Site'), max_length=100, 
         null=True, blank=True, help_text=_("Domain of external site."))
     # history is saved in m2m table that connects to history.
+    created = models.DateTimeField(_('Created'), auto_now_add=True)
     history = models.ManyToManyField(Networks, through='History')
     # Content
-    title = models.CharField(_('Title Text'), max_length=128)
+    headline = models.CharField(_('Title Text'), max_length=128)
     excerpt = models.CharField(_('Excerpt Text'), max_length=255, null=True,
         blank=True, help_text=_('Text supplied to network with share'))
+    message = models.CharField(_('Mail Message'), max_length=4096, null=True,
+                               blank=True)
     description = models.TextField(_('Description'), null=True, blank=True,
         help_text=_('Your message that goes with what you are sharing.'))
     tweet = models.CharField(_("Tweet"), max_length=200, null=True, 
@@ -131,7 +133,7 @@ class MyShare(models.Model):
             socialshare = SocialShare(
                 api_token or settings.MYSHARE_API_TOKEN,
                 api_secret or settings.MYSHARE_API_SECRET,
-                headline=self.title,
+                headline=self.headline,
                 tweet=self.tweet,
                 excerpt=self.message,
                 url=self.url or settings.MYSHARE_DEFAULT_URL,
@@ -163,7 +165,7 @@ class MyShare(models.Model):
         network: name of a social share backend (e.g. 'facebook or 'twitter')
         consumer_token: Oauth consumer token
         consumer_secret: Oauth consumer secret
-        """
+        """        
         self.do_share([{'network':network, 'consumer_token':consumer_token,
                         'consumer_secret':consumer_secret}], 
                       api_token=api_token, api_secret=api_secret)
@@ -201,7 +203,7 @@ class MyShare(models.Model):
         # Automatically update the status 
         clean = True
         if self.status == 201:
-            if len(self.title) < 1: 
+            if len(self.headline) < 1: 
                 clean = False
             if len(self.url) < 1:
                 clean = False
@@ -214,14 +216,14 @@ class MyShare(models.Model):
         super(MyShare, self).save(force_insert, force_update)
     
     def __unicode__(self):
-        return u'%s (%s)' % (self.title or 'No Title', self.url)
+        return u'%s (%s)' % (self.headline or 'No Title', self.url)
     
 class History(models.Model):
     """Records history of shares"""
     share = models.ForeignKey(MyShare, related_name=_("SharedContent"))
     user = models.ForeignKey(User, db_index=True)
     network = models.ForeignKey(Networks, related_name=_("On Social Network"),
-                                db_index=True)
+                                db_index=True) 
     created = models.DateTimeField(_('Created'), auto_now_add=True,
         help_text=_("Datestamp of share."),db_index=True)
     
