@@ -13,12 +13,12 @@ from myshare.helpers import get_share_settings
 
 # Don't put this on the internet without restricting access unless you want
 # to be phish/spam/scam central
-# @login_required
+@login_required
 def create_share (request, share_me_url=""):
     """implements a quick share me url"""
     if request.method == "GET":
         # Display a share model form 
-     pass
+    pass
  
 def new(request, url):
     """Implements create share view
