@@ -8,7 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
                        
      url(r'^$', 'app.views.home', name='example-home'),
-     url(r'^share/$', 'app.views.simple_share', name='example-simple'),
+     url(r'^share/$', 'myshare.views.simple_share', name='example-simple'),
      url(r'^api/$', 'app.views.example_api', name='example-api'),
      url(r'^history/$', MyShareHistory.as_view() , name='example-history'),
      url(r'^new/$', 'myshare.views.new', name='myshare-new'),
