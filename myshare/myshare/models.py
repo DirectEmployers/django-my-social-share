@@ -131,13 +131,13 @@ class MyShare(models.Model):
         if self.status == 202:
             # time to do the share
             socialshare = SocialShare(
-                api_token or settings.MYSHARE_API_TOKEN,
-                api_secret or settings.MYSHARE_API_SECRET,
+                api_token, 
+                api_secret, 
                 headline=self.headline,
                 tweet=self.tweet,
                 excerpt=self.message,
                 url=self.url or settings.MYSHARE_DEFAULT_URL,
-                url_title=self.url_title or settings.MYSHARE_DEFAULT_URL_TITLE,
+                url_title=self.url_title or settings.MYSHARE_DEFAULT_URL_TITLE, 
                 url_description=self.url_description or settings.MYSHARE_DEFAULT_URL_DESCRIPTION,
                 image_url=self.image_url or settings.MYSHARE_DEFAULT_IMAGE_URL,
                 image_url_title=self.image_url_title or settings.MYSHARE_DEFAULT_IMAGE_URL_TITLE,
